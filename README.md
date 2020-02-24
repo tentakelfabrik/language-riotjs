@@ -1,6 +1,6 @@
 # Riotjs Syntax highlight for Atom
 
-[Riot.js](https://riot.js.org) '.riot' components.
+[Riot.js](https://riot.js.org) `.riot` components.
 
 ## Install
 
