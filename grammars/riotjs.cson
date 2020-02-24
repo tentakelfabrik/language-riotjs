@@ -1,0 +1,238 @@
+scopeName: 'source.riot'
+name: 'HTML (Riotjs)'
+fileTypes: [
+    'riot'
+]
+patterns: [
+
+    # HTML -------------------------------
+    {
+        name: 'meta.tag.any.html'
+        begin: '(</?)([a-zA-Z0-9_-]+)'
+        beginCaptures:
+            '1':
+                name: 'punctuation.definition.tag.begin.html'
+            '2':
+                name: 'entity.name.tag.any.html'
+        end: '>'
+        endCaptures:
+            '0':
+                name: 'punctuation.definition.tag.end.html'
+        patterns: [
+            { 'include': '#riotExpressions' }
+            { 'include': '#tagStuff' }
+        ]
+    }
+    # ------------------------------- HTML
+
+    # Script -------------------------------
+    {
+        name: "source.js.embedded.html"
+        begin: "(?:^\\s+)?(<)((?i:script))\\b(?![^>]*/>|lang=[\"'].*[\"'])"
+        beginCaptures:
+            "1":
+                name: "punctuation.definition.tag.html"
+            "2":
+                name: "entity.name.tag.script.html"
+        end: "(?<=</(script|SCRIPT))(>)(?:\\s*\\n)?"
+        endCaptures:
+            "2":
+                name: "punctuation.definition.tag.html"
+        patterns: [
+            {
+                include: "#tag-stuff"
+            }
+            {
+                begin: "(?<!</(?:script|SCRIPT))(>)"
+                end: "(</)((?i:script))"
+                captures:
+                    "1":
+                        name: "punctuation.definition.tag.html"
+                    "2":
+                        name: "entity.name.tag.script.html"
+                patterns: [
+                    {
+                        name: "comment.line.double-slash.js"
+                        begin: "//"
+                        end: "$|(?=</script)"
+                        captures:
+                            "1":
+                                name: "punctuation.definition.comment.js"
+                    }
+                    {
+                        name: "comment.block.js"
+                        begin: "/\\*"
+                        end: "\\*/|(?=</script)"
+                        captures:
+                            "0":
+                                name: "punctuation.definition.comment.js"
+                    }
+                    {
+                        include: "source.js"
+                    }
+                ]
+            }
+        ]
+    }
+    # ------------------------------- Script
+
+    # Style ------------------------------
+    # Pure CSS
+    {
+        contentName: 'source.css.embedded.html'
+        begin: '(?:^\\s+)?(<)(style)\\b(?![^>]*(?:(?:/>)|(?:type="(?:text/)?(?:sass|scss)")))'
+        end: '(</)(style)(>)(?:\\s*\\n)?'
+        captures:
+            '1':
+                name: 'punctuation.definition.tag.begin.html'
+            '2':
+                name: 'entity.name.tag.style.html'
+            '3':
+                name: 'punctuation.definition.tag.end.html'
+        patterns: [
+            { include: '#tagStuff' }
+            {
+                begin: '(>)'
+                end: '(?=</style)'
+                patterns: [
+                    { include: 'source.css' }
+                ]
+            }
+        ]
+    }
+    # Sass
+    {
+        contentName: 'source.sass.embedded.html'
+        begin: '(?:^\\s+)?(<)(style)\\b(?=[^>]*type="(?:text/)?sass")'
+        end: '(</)(style)(>)(?:\\s*\\n)?'
+        captures:
+            '1':
+                name: 'punctuation.definition.tag.begin.html'
+            '2':
+                name: 'entity.name.tag.style.html'
+            '3':
+                name: 'punctuation.definition.tag.end.html'
+        patterns: [
+            { include: '#tagStuff' }
+            {
+                begin: '(>)'
+                end: '(?=</style)'
+                patterns: [
+                    { include: 'source.sass' }
+                ]
+            }
+        ]
+    }
+    # Scss
+    {
+        contentName: 'source.css.scss.embedded.html'
+        begin: '(?:^\\s+)?(<)(style)\\b(?=[^>]*type="(?:text/)?scss")'
+        end: '(</)(style)(>)(?:\\s*\\n)?'
+        captures:
+            '1':
+                name: 'punctuation.definition.tag.begin.html'
+            '2':
+                name: 'entity.name.tag.style.html'
+            '3':
+                name: 'punctuation.definition.tag.end.html'
+        patterns: [
+            { include: '#tagStuff' }
+            {
+                begin: '(>)'
+                end: '(?=</style)'
+                patterns: [
+                    { include: 'source.css.scss' }
+                ]
+            }
+        ]
+    }
+    # ------------------------------ Style
+
+    # include ----------------------------
+    { include: 'text.html.basic' }
+    # ------------------------------------
+]
+
+repository:
+
+    riotExpressions:
+        name: 'meta.string.expression.riot'
+        begin: '\\{'
+        beginCaptures:
+            '0':
+                name: 'punctuation.definition.block.begin.riot'
+        end: '\\}'
+        endCaptures:
+            '0':
+                name: 'punctuation.definition.block.end.riot'
+        contentName: 'source.js'
+
+    stringDoubleQuoted:
+        name: 'string.quoted.double.html'
+        begin: '"'
+        beginCaptures:
+            '0':
+                name: 'punctuation.definition.string.begin.html'
+        end: '"'
+        endCaptures:
+            '0':
+                name: 'punctuation.definition.string.end.html'
+
+    stringSingleQuoted:
+        name: 'string.quoted.single.html'
+        begin: '\''
+        beginCaptures:
+            '0':
+                name: 'punctuation.definition.string.begin.html'
+        end: '\''
+        endCaptures:
+            '0':
+                name: 'punctuation.definition.string.end.html'
+
+    tagGenericAttribute:
+        name: 'entity.other.attribute-name.html'
+        match: '\\b([a-zA-Z-]+)'
+
+    tagIdAttribute:
+        name: 'meta.attribute-with-value.id.html'
+        begin: '\\b(id)\\b\\s*(=)'
+        captures:
+            '1':
+                name: 'entity.other.attribute-name.id.html'
+            '2':
+                name: 'punctuation.separator.key-value.html'
+        end: '(?<=\'|")|(?=\\s|>)'
+        patterns: [
+            {
+                name: 'string.quoted.double.html'
+                contentName: 'meta.toc-list.id.html'
+                begin: '"'
+                beginCaptures:
+                    '0':
+                        name: 'punctuation.definition.string.begin.html'
+                end: '"'
+                endCaptures:
+                    '0':
+                        name: 'punctuation.definition.string.end.html'
+            }
+            {
+                name: 'string.quoted.single.html'
+                contentName: 'meta.toc-list.id.html'
+                begin: '\''
+                beginCaptures:
+                    '0':
+                        name: 'punctuation.definition.string.begin.html'
+                end: '\''
+                endCaptures:
+                    '0':
+                        name: 'punctuation.definition.string.end.html'
+            }
+        ]
+
+    tagStuff:
+        patterns: [
+            { include: '#tagIdAttribute' }
+            { include: '#tagGenericAttribute' }
+            { include: '#stringDoubleQuoted' }
+            { include: '#stringSingleQuoted' }
+        ]

@@ -1,0 +1,12 @@
+{
+  "name": "language-riotjs",
+  "version": "0.1.0",
+  "description": "Riotjs Syntax highlight for Atom",
+  "keywords": [],
+  "repository": "https://github.com/dekimasoon/language-riot-tag",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {}
+}
