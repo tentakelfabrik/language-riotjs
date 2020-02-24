@@ -1,6 +1,6 @@
 {
   "name": "language-riotjs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Riotjs Syntax highlight for Atom",
   "keywords": [],
   "repository": "https://github.com/tentakelfabrik/language-riotjs",
